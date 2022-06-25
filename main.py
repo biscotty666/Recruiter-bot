@@ -44,9 +44,10 @@ RecBot.config_token = secret_file['token']
 logging.basicConfig(level=logging.INFO)
 RecBot.version = "0.1.0"
 
+filetoopen = str(cwd)+'/venv/config.yml'
 
 # Fetch configuration variables
-with open('venv/config.yml') as file :
+with open(filetoopen) as file :
     config = yaml.safe_load(file)
 
 
@@ -179,10 +180,7 @@ def GenerateSlide():
         # set font size and color for second column
         ('FONTSIZE',(1,1),(1,-1),12),
         ('TEXTCOLOR',(1,1),(1,-1),colors.red),
-        # set font size and color for third and fourth columns
-        ('FONTSIZE',(2,1),(3,-1),12),
-        ('TEXTCOLOR',(2,1),(3,-1),colors.black),
-        ('BACKGROUND',(2,1),(3,-1),bcolor),
+
         # set font size and color for fifth column
         ('FONTSIZE',(4,1),(4,-1),12),
         ('TEXTCOLOR',(4,1),(4,-1),colors.pink),
