@@ -6,12 +6,15 @@ certifi==2022.6.15
 discord==1.7.3
 discord.py==1.7.3
 filelock==3.7.1
+gunicorn==20.1.0
 multidict==6.0.2
 pdf2image==1.16.0
 Pillow==9.0.1
 pipenv==2022.6.7
 PyYAML==6.0
 reportlab==3.5.67
+typing_extensions @ file:///opt/conda/conda-bld/typing_extensions_1647553014482/work
+urllib3 @ file:///opt/conda/conda-bld/urllib3_1650637206367/work
 virtualenv==20.14.1
 virtualenv-clone==0.5.7
 yarl==1.7.2
