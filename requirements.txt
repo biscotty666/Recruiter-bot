@@ -3,8 +3,6 @@ async-timeout==3.0.1
 attrs==21.4.0
 brotlipy==0.7.0
 certifi==2022.6.15
-cffi @ file:///home/builder/ci_310/cffi_1642753365720/work
-chardet @ file:///home/builder/ci_310/chardet_1640804867535/work
 charset-normalizer @ file:///tmp/build/80754af9/charset-normalizer_1630003229654/work
 cryptography @ file:///tmp/build/80754af9/cryptography_1652101588599/work
 discord==1.7.3
