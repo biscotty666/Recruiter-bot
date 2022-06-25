@@ -48,7 +48,7 @@ RecBot.version = "0.1.0"
 
 # Fetch configuration variables
 # with open(filetoopen) as file :
-with open('config.yml') as file :
+with open('bot_config/config.yml') as file :
     config = yaml.safe_load(file)
 
 
@@ -87,17 +87,13 @@ def GetGuildData():
                 GetData()
 
         response = GetData()
-        # print('Got response: "', response, '"')
-        # extract dictionary from list
         guildinfo = response[0]
-        # Call function to populate raid items in guilds
-        # RDict = PRaidCounts(guildinfo['raid'])
+
         # Add the rest of the info
         guilds.append({
             'GGp' : guildinfo['gp'],
             'GName' : guildinfo['name'],
             'GMembers' : guildinfo['members'],
-            # 'GRaid' : guildinfo['raid'],
         })
 
         f = open('OpenSlots.txt', "a")
