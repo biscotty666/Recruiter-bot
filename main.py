@@ -64,7 +64,7 @@ def GetGuildData():
 
     # Create txt file
     f = open('OpenSlots.txt', 'w')
-    f.write("Updated: " + str(now) + '\n\n')
+    f.write("Updated: " + str(now) + '\n')
     f.write('Name'.ljust(20) + 'GM'.rjust(7) + 'GP'.rjust(8) + '\n')
     f.close()
 
