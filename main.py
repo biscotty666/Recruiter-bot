@@ -37,20 +37,9 @@ cwd = Path(__file__).parents[0]
 cwd = str(cwd)
 print(f"{cwd}\n-----")
 
-#Defining a few things
-secret_file = json.load(open(cwd+'/bot_config/secrets.json'))
-RecBot = commands.Bot(command_prefix='/', case_insensitive=True)#, owner_id=271612318947868673)
-RecBot.config_token = secret_file['token']
-logging.basicConfig(level=logging.INFO)
-RecBot.version = "0.1.0"
-
-# filetoopen = str(cwd)+'/venv/config.yml'
-
 # Fetch configuration variables
-# with open(filetoopen) as file :
-with open('bot_config/config.yml') as file :
+with open('bot_config//config.yml') as file :
     config = yaml.safe_load(file)
-
 
 #Make the connection
 creds = settings(config['CredName'], config['CredPass'], config['CredNum'], config['CredLet'])
@@ -62,7 +51,6 @@ def GetGuildData():
     counter = 0
     guilds = []
     now = datetime.now()
-    # print(now)
 
     # Create txt file
     f = open('OpenSlots.txt', 'w')
@@ -70,8 +58,7 @@ def GetGuildData():
     f.write('Name'.ljust(20) + 'GM'.rjust(7) + 'GP'.rjust(8) + '\n')
     f.close()
 
-
-
+    # Make the calls and populate guilds
     for allycode in config['allycodes'] :
         counter += 1
         print('This is pass ', counter, '/14')
@@ -96,6 +83,7 @@ def GetGuildData():
             'GMembers' : guildinfo['members'],
         })
 
+        # Add infor to the OpenSlots.txt
         f = open('OpenSlots.txt', "a")
         if guildinfo['members'] < 50 : f.write(str(guildinfo['name']).ljust(20) + str(guildinfo['members']).rjust(7) + str(round(guildinfo['gp']/1000000)).rjust(8)+'\n')
         f.close()
@@ -104,6 +92,8 @@ def GetGuildData():
 
 guilds = GetGuildData()
 
+
+# Generate the slide from data in guilds
 def GenerateSlide():
 
     #Create the Canvas object
@@ -114,21 +104,19 @@ def GenerateSlide():
     c.setTitle(config['RSTitle'])
 
     #Draw statically positioned items on canvas
-
     c.drawImage('RPBackground.jpg', 0, 0, width=width, height=height)
     c.setFont(config['Font'], config['FontSize'])
     c.setFillColor(colors.beige)
     c.drawCentredString(width/2, 330, config['RSTitle'])
     c.setFont(config['Font'], config['FontSize']-10)
     c.drawCentredString(width/2, 10, 'hello there')
-    c.drawImage('Shard-Character-Ki-Adi-Mundi.png', 437, 300,width=20, height=20)
-    c.drawImage('Shard-Character-Wat_Tambor.png', 512, 300,width=20, height=20)
-
-
+    c.drawImage('Shard-Character-Ki-Adi-Mundi.png', 437, 300,width=15, height=15)
+    c.drawImage('Shard-Character-Wat_Tambor.png', 512, 300,width=15, height=15)
 
     #populate data for the table
     #create first row of table
     data= [['', 'GP','DSTB', 'LSTB', 'CPit', '', '', 'GM']]
+
     #create the rest of the rows
     for guild in guilds :
         #modify appearance and content of items in guilds
@@ -197,17 +185,22 @@ def GenerateSlide():
     c.showPage()
     c.save()
 
-
-
 GenerateSlide()
 
-# Generate png
+# Convert pdf to png
 def Makepng():
     images = convert_from_path('RecruitmentSlide.pdf')
     for image in images:
         image.save('RecruitmentSlide.png')
 
+# Define and start the bot
 
+#Defining a few things
+secret_file = json.load(open(cwd+'/bot_config/secrets.json'))
+RecBot = commands.Bot(command_prefix='/', case_insensitive=True)#, owner_id=271612318947868673)
+RecBot.config_token = secret_file['token']
+logging.basicConfig(level=logging.INFO)
+RecBot.version = "0.1.0"
 
 @RecBot.event
 async def on_ready():
@@ -258,10 +251,5 @@ async def UpdateData(ctx):
         await ctx.send("```"+'\n' +content+'\n'+"```")
     except:
         await ctx.send("Oops")
-#         guilds = GetGuildData()
-#         await ctx.send('Data Updated')
-#     except:
-#         await ctx.send("Could not fetch data. Please try again")
         
-
 RecBot.run(RecBot.config_token) #Runs our bot
