@@ -48,7 +48,7 @@ RecBot.version = "0.1.0"
 
 # Fetch configuration variables
 # with open(filetoopen) as file :
-with open('venv/config.yml') as file :
+with open('config.yml') as file :
     config = yaml.safe_load(file)
 
 

@@ -1,0 +1,145 @@
+# This is the file used to maintain the Recruitment Poster.
+---
+# List an ally code associated with each guild you want to appear on the poster.
+# The order of the codes here will determine the order of the guilds on the poster.
+#
+allycodes :
+  # Rebellion (jcrAggie)
+  - "135718294"
+  # Empire (SavageWill)
+  - "418877148"
+  # Havoc (Andosan)
+  - "924484782"
+  # Røgue (Finest)
+  - "481181396"
+  # Order (Dr. Microphone)
+  - "598564956"
+  # # Uprising (Gallows)
+  # - "193382128"
+  # # # Lotus (General Leia Organa (Lotus - in-game name is Ruby Starr Wynn))
+  # - "315585918"
+  # # Phoundlings (Jingle's alt)
+  # - "681711581"
+  # # Hope (Whitefly425)
+  # - "166494741"
+  # # Beskar (cokey)
+  # - "263852135"
+  # # Death Watch (kcaz zeraaus)
+  # - "825611769"
+  # # Away Team
+  # - "316582559"
+  # # Pain
+  # - "833756326"
+  # # Limb
+  # - "495879912"
+#
+# Here you can change the TB data displayed on the poster
+# This data cannot be gleaned from the api
+#
+DSTB :
+  Rebellion: 31
+  Ëmpire: 32
+  Havoc: 31
+  Røgue: 28
+  Ørder: 32
+  Uprising: 29
+  Lotus Society: 29
+  Phøundlings: 16
+  Høpe: 26
+  Beskar: 17
+  Deathwatch: 23(H)
+  Away Team: 19
+  Pain: 33(H)
+  Limb: 13(H)
+LSTB :
+  Rebellion: 23
+  Ëmpire: 23
+  Havoc: 16
+  Røgue: 13
+  Ørder: 25
+  Uprising: 14
+  Lotus Society: 15
+  Phøundlings: 42(H)
+  Høpe: 14
+  Beskar: 41(H)
+  Deathwatch: 21(H)
+  Away Team: 7
+  Pain: 31(H)
+  Limb: 14(H)
+CPIT :
+  Rebellion: Y
+  Ëmpire: Y
+  Havoc: Merc
+  Røgue: Y
+  Ørder: Y
+  Uprising: Y
+  Lotus Society: N
+  Phøundlings: N
+  Høpe: Y
+  Beskar: N
+  Deathwatch: N
+  Away Team: N
+  Pain: N
+  Limb: N
+KAM :
+  Rebellion: 29
+  Ëmpire: 30
+  Havoc: 12
+  Røgue: 5
+  Ørder: 30
+  Uprising: 6
+  Lotus Society: 7
+  Phøundlings: 0
+  Høpe: 12
+  Beskar: 0
+  Deathwatch: 0
+  Away Team: 3
+  Pain: 0
+  Limb: 0
+WAT :
+  Rebellion: 44
+  Ëmpire: 46
+  Havoc: 33
+  Røgue: 34
+  Ørder: 44
+  Uprising: 29
+  Lotus Society: 35
+  Phøundlings: 28
+  Høpe: 41
+  Beskar: 12
+  Deathwatch: 0
+  Away Team: 25
+  Pain: 0
+  Limb: 0
+#
+# Here you can specify the output file
+#
+RSFilename : "RecruitmentSlide.pdf"
+#
+# You can change the font here. If is a custom font a
+# modification to main.py is necessary. Two custom fonts
+# are availabe: Trickster and Vampire. All common fonts
+# should work
+#
+Font : 'Vampire'
+FontSize : 28
+FontColor : 'brickred'
+# FontColor is currently not working. This must be changed in
+# main.py. Search for TEXTCOLOR
+#FontColor : 'brickred'
+#
+# I don't actually  know what this does yet lol
+#
+RSDocumentTitle : 'The Phant??m Alliance'
+#
+# This is the title that appears on the poster
+#
+RSTitle : 'Phantøm Alliance'
+#
+# This is where you put in your credentials to log
+# in to the api
+#
+CredName : 'brianscotty'
+CredPass : 'tz0tz1lSW'
+CredNum : '123'
+CredLet : 'abc'
