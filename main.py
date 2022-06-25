@@ -44,10 +44,11 @@ RecBot.config_token = secret_file['token']
 logging.basicConfig(level=logging.INFO)
 RecBot.version = "0.1.0"
 
-filetoopen = str(cwd)+'/venv/config.yml'
+# filetoopen = str(cwd)+'/venv/config.yml'
 
 # Fetch configuration variables
-with open(filetoopen) as file :
+# with open(filetoopen) as file :
+with open('venv/config.yml') as file :
     config = yaml.safe_load(file)
 
 
