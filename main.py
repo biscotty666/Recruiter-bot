@@ -253,6 +253,7 @@ async def GetRecruitmentSlide(ctx):
     Get Recruitment Slide
     """
     try:
+        # force update
         Makepng()
         await ctx.send(file=discord.File('RecruitmentSlide.png'))
     except:
