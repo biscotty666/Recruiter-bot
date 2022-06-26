@@ -1,2 +1,6 @@
-Updated: 2022-06-25 12:00:51.515124
+Updated: 2022-06-26 16:01:00.850547
+
 Name                     GM      GP
+Havoc                    49     311
+Røgue                    47     243
+Uprising                 47     268
