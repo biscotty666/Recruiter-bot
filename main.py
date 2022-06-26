@@ -207,10 +207,10 @@ def GenerateSlide():
 GenerateSlide()
 
 # Convert pdf to png
-def Makepng():
-    images = convert_from_path('RecruitmentSlide.pdf')
-    for image in images:
-        image.save('RecruitmentSlide.png')
+# def Makepng():
+    # images = convert_from_path('RecruitmentSlide.pdf')
+    # for image in images:
+    #     image.save('RecruitmentSlide.png')
 
 # Define and start the bot
 
@@ -254,7 +254,11 @@ async def GetRecruitmentSlide(ctx):
     """
     try:
         # force update
-        Makepng()
+        # Makepng()
+        images = convert_from_path('RecruitmentSlide.pdf')
+        for image in images:
+            image.save('RecruitmentSlide.png')
+
         await ctx.send(file=discord.File('RecruitmentSlide.png'))
     except:
         await ctx.send("Could not fetch data. Please try again")
