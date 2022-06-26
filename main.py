@@ -206,6 +206,11 @@ def GenerateSlide():
 
 GenerateSlide()
 
+images = convert_from_path('RecruitmentSlide.pdf')
+for image in images:
+    image.save('RecruitmentSlide.png')
+
+
 # Convert pdf to png
 # def Makepng():
     # images = convert_from_path('RecruitmentSlide.pdf')
@@ -255,13 +260,6 @@ async def GetRecruitmentSlide(ctx):
     try:
         # force update
         # Makepng()
-        await ctx.send('Try co convert from path')
-        images = convert_from_path('RecruitmentSlide.pdf')
-        await ctx.send('That worked')
-        # images = convert_from_path('RecruitmentSlide.pdf')
-        print('okay so far')
-        for image in images:
-            image.save('RecruitmentSlide.png')
         await ctx.send(file=discord.File('RecruitmentSlide.png'))
     except:
         await ctx.send("Could not fetch data. Please try again")
