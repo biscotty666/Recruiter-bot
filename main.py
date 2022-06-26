@@ -256,9 +256,9 @@ async def GetRecruitmentSlide(ctx):
         # force update
         # Makepng()
         images = convert_from_path('RecruitmentSlide.pdf')
+        print('okay so far')
         for image in images:
             image.save('RecruitmentSlide.png')
-
         await ctx.send(file=discord.File('RecruitmentSlide.png'))
     except:
         await ctx.send("Could not fetch data. Please try again")
