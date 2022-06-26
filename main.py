@@ -255,7 +255,10 @@ async def GetRecruitmentSlide(ctx):
     try:
         # force update
         # Makepng()
+        await ctx.send('Try co convert from path')
         images = convert_from_path('RecruitmentSlide.pdf')
+        await ctx.send('That worked')
+        # images = convert_from_path('RecruitmentSlide.pdf')
         print('okay so far')
         for image in images:
             image.save('RecruitmentSlide.png')
