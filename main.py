@@ -38,7 +38,7 @@ cwd = str(cwd)
 # print(f"{cwd}\n-----")
 
 # Fetch configuration variables
-with open('bot_config//config.yml') as file :
+with open('config.yml') as file :
     config = yaml.safe_load(file)
 
 #Make the connection
@@ -216,15 +216,15 @@ GenerateSlide()
 
 #Defining a few things
 secret_file = json.load(open(cwd+'/bot_config/secrets.json'))
-RecBot = commands.Bot(command_prefix='!', case_insensitive=True)#, owner_id=271612318947868673)
+RecBot = commands.Bot(command_prefix='$', case_insensitive=True)#, owner_id=271612318947868673)
 RecBot.config_token = secret_file['token']
 logging.basicConfig(level=logging.INFO)
 RecBot.version = "0.1.0"
 
 @RecBot.event
 async def on_ready():
-    print(f"-----\nLogged in as: {RecBot.user.name} : {RecBot.user.id}\n-----\nMy current prefix is: !\n-----")
-    await RecBot.change_presence(activity=discord.Game(name=f"Hi, my names {RecBot.user.name}.\nUse ! to interact with me!")) # This changes the bots 'activity'
+    print(f"-----\nLogged in as: {RecBot.user.name} : {RecBot.user.id}\n-----\nMy current prefix is: $\n-----")
+    await RecBot.change_presence(activity=discord.Game(name=f"Hi, my names {RecBot.user.name}.\nUse $ to interact with me!")) # This changes the bots 'activity'
 
 @RecBot.command()
 async def echo(ctx, *, message=None):
