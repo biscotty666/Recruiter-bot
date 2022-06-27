@@ -232,12 +232,8 @@ RecBot.version = "0.1.0"
 async def on_ready():
     print(f"-----\nLogged in as: {RecBot.user.name} : {RecBot.user.id}\n-----\nMy current prefix is: $\n-----")
     await RecBot.change_presence(activity=discord.Game(name=f"Hi, my names {RecBot.user.name}.\nUse $ to interact with me!")) # This changes the bots 'activity'
-    try:
-        with open("OpenSlots.txt") as f: 
-            content = "\n".join(f.readlines())
-        await ctx.send("```"+'\n' +content+'\n'+"```")
-    except:
-        await ctx.send("Oops")
+    # try:
+    # "Oops")
 
 @RecBot.command(name='UpdateData', aliases=['ud', 'du'])
 async def UpdateData(ctx):
@@ -275,14 +271,15 @@ async def NeedMembers(ctx):
     except:
         await ctx.send("Oops")
 
-@tasks.loop(seconds=60)
-async def PostMembers():
-    try:
-        with open("OpenSlots.txt") as f: 
-            content = "\n".join(f.readlines())
-        await ctx.send("```"+'\n' +content+'\n'+"```")
-    except:
-        await ctx.send("Oops")
-PostMembers.start()
+# @tasks.loop(seconds=60)
+# async def PostMembers():
+    num = 1
+#     try:
+#         with open("OpenSlots.txt") as f: 
+#             content = "\n".join(f.readlines())
+#         await ctx.send("```"+'\n' +content+'\n'+"```")
+#     except:
+#         await ctx.send("Oops")
+# PostMembers.start()
         
 RecBot.run(RecBot.config_token) #Runs our bot
