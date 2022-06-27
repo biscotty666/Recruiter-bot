@@ -218,6 +218,7 @@ for image in images:
     #     image.save('RecruitmentSlide.png')
 
 # Define and start the bot
+# forv
 
 #Defining a few things
 secret_file = json.load(open(cwd+'/bot_config/secrets.json'))
