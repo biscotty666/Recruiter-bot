@@ -3,6 +3,7 @@
 #Prepare environment
 import PIL.ImageDraw
 import discord
+from discord.ext import tasks
 import os
 import regex
 import yaml
@@ -232,15 +233,6 @@ async def on_ready():
     print(f"-----\nLogged in as: {RecBot.user.name} : {RecBot.user.id}\n-----\nMy current prefix is: $\n-----")
     await RecBot.change_presence(activity=discord.Game(name=f"Hi, my names {RecBot.user.name}.\nUse $ to interact with me!")) # This changes the bots 'activity'
 
-@RecBot.command()
-async def echo(ctx, *, message=None):
-    """
-    A simple command that repeats the users input back to them.
-    """
-    message = message or "Please provide the message to be repeated."
-    await ctx.message.delete()
-    await ctx.send(message)
-
 @RecBot.command(name='UpdateData', aliases=['ud', 'du'])
 async def UpdateData(ctx):
     """
@@ -266,7 +258,7 @@ async def GetRecruitmentSlide(ctx):
         await ctx.send("Could not fetch data. Please try again")
 
 @RecBot.command(name='NeedMembers', aliases=['members', 'nm'])
-async def UpdateData(ctx):
+async def NeedMembers(ctx):
 #     """
 #     Get list of guilds needing members
 #     """
@@ -276,5 +268,15 @@ async def UpdateData(ctx):
         await ctx.send("```"+'\n' +content+'\n'+"```")
     except:
         await ctx.send("Oops")
+
+@tasks.loop(seconds=60)
+async def PostMembers():
+    try:
+        with open("OpenSlots.txt") as f: 
+            content = "\n".join(f.readlines())
+        await ctx.send("```"+'\n' +content+'\n'+"```")
+    except:
+        await ctx.send("Oops")
+
         
 RecBot.run(RecBot.config_token) #Runs our bot
