@@ -132,7 +132,7 @@ def GenerateSlide():
     c.setFont(config['Font'], config['FontSize'])
     c.setFillColor(colors.orangered)
     c.drawCentredString(width/2, 330, config['RSTitle'])
-    c.setFont(config['Font'], config['FontSize']-10)
+    # c.setFont(config['Font'], config['FontSize']-14)
     c.drawCentredString(width/2, 10, 'hello there')
     c.drawImage('Shard-Character-Ki-Adi-Mundi.png', 440, 300,width=15, height=15)
     c.drawImage('Shard-Character-Wat_Tambor.png', 515, 300,width=15 , height=15)
@@ -181,10 +181,10 @@ def GenerateSlide():
         ('FONTSIZE',(0,1),(0,-1),18),
         ('TEXTCOLOR',(0,1),(0,-1),colors.cyan),
         # set font size and color for second column
-        ('FONTSIZE',(1,1),(1,-1),12),
+        ('FONTSIZE',(1,1),(1,-1),16),
         ('TEXTCOLOR',(1,1),(1,-1),colors.whitesmoke),
         # set font size and color for third and fourth column
-        ('FONTSIZE',(2,1),(3,-1),12),
+        ('FONTSIZE',(2,1),(3,-1),16),
         ('TEXTCOLOR',(2,1),(3,-1),colors.whitesmoke),
         # set font size and color for fifth column
         ('FONTSIZE',(4,1),(4,-1),16),
