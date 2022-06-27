@@ -133,7 +133,7 @@ def GenerateSlide():
     c.setFillColor(colors.orangered)
     c.drawCentredString(width/2, 330, config['RSTitle'])
     # c.setFont(config['Font'], config['FontSize']-14)
-    c.drawCentredString(width/2, 10, 'hello there')
+    # c.drawCentredString(width/2, 10, 'hello there')
     c.drawImage('Shard-Character-Ki-Adi-Mundi.png', 440, 300,width=15, height=15)
     c.drawImage('Shard-Character-Wat_Tambor.png', 515, 300,width=15 , height=15)
 
@@ -173,7 +173,7 @@ def GenerateSlide():
 
         ('FONT',(0,0),(-1,-1), 'Helvetica-Bold', 18),
         ('TEXTCOLOR',(0,0),(-1,-1),colors.white),
-        ('BOTTOMPADDING',(0,0),(-1,0),5),
+        ('BOTTOMPADDING',(0,0),(-1,0),8),
         # set font and color for top row
         ('FONTSIZE',(0,0),(-1,0),18),
         ('TEXTCOLOR',(0,0),(-1,0),colors.cyan),
@@ -200,7 +200,7 @@ def GenerateSlide():
         ('ALIGN',(1,0), (-1,-1),'CENTER'),
         ]))
     w, h = table.wrapOn(c, width, height)
-    table.drawOn(c, 10, 305-h)
+    table.drawOn(c, 10, 310-h)
 
     c.showPage()
     c.save()
@@ -232,6 +232,12 @@ RecBot.version = "0.1.0"
 async def on_ready():
     print(f"-----\nLogged in as: {RecBot.user.name} : {RecBot.user.id}\n-----\nMy current prefix is: $\n-----")
     await RecBot.change_presence(activity=discord.Game(name=f"Hi, my names {RecBot.user.name}.\nUse $ to interact with me!")) # This changes the bots 'activity'
+    try:
+        with open("OpenSlots.txt") as f: 
+            content = "\n".join(f.readlines())
+        await ctx.send("```"+'\n' +content+'\n'+"```")
+    except:
+        await ctx.send("Oops")
 
 @RecBot.command(name='UpdateData', aliases=['ud', 'du'])
 async def UpdateData(ctx):
