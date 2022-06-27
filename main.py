@@ -277,6 +277,6 @@ async def PostMembers():
         await ctx.send("```"+'\n' +content+'\n'+"```")
     except:
         await ctx.send("Oops")
-
+PostMembers.start()
         
 RecBot.run(RecBot.config_token) #Runs our bot
