@@ -13,8 +13,6 @@ networkx==2.8.4
 pdf2image==1.16.0
 Pillow==9.0.1
 pipenv==2022.6.7
-poppler==0.89.0
-poppler-data==0.4.11
 pydot==1.4.2
 pydotplus==2.0.2
 pykwalify==1.8.0
