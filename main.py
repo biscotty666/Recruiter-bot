@@ -125,7 +125,7 @@ def GenerateSlide():
 
     #Draw statically positioned items on canvas
 
-    c.drawImage('RPBackground.png', 0, 0, width=width, height=height)
+    c.drawImage('RPBackgroun.jpeg', 0, 0, width=width, height=height)
     # c.drawImage('image.jpg', width=width, height=height)
 
     c.setFont(config['Font'], config['FontSize'])
@@ -170,31 +170,31 @@ def GenerateSlide():
     # t.setStyle(TableStyle([("BOX", (0, 0), (-1, -1), 0.25, colors.black),
     #                        ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black)]))
 
-        ('FONT',(0,0),(-1,-1), 'Helvetica-Bold', 22),
+        ('FONT',(0,0),(-1,-1), 'Helvetica-Bold', 18),
         ('TEXTCOLOR',(0,0),(-1,-1),colors.white),
         ('BOTTOMPADDING',(0,0),(-1,0),5),
         # set font and color for top row
-        ('FONTSIZE',(0,0),(-1,0),14),
-        ('TEXTCOLOR',(0,0),(-1,0),colors.blue),
+        ('FONTSIZE',(0,0),(-1,0),18),
+        ('TEXTCOLOR',(0,0),(-1,0),colors.cyan),
         # set font size and color for first column
-        ('FONTSIZE',(0,1),(0,-1),14),
-        ('TEXTCOLOR',(0,1),(0,-1),colors.blue),
+        ('FONTSIZE',(0,1),(0,-1),18),
+        ('TEXTCOLOR',(0,1),(0,-1),colors.cyan),
         # set font size and color for second column
         ('FONTSIZE',(1,1),(1,-1),12),
-        ('TEXTCOLOR',(1,1),(1,-1),colors.yellow),
+        ('TEXTCOLOR',(1,1),(1,-1),colors.whitesmoke),
         # set font size and color for third and fourth column
         ('FONTSIZE',(2,1),(3,-1),12),
-        ('TEXTCOLOR',(2,1),(3,-1),colors.yellow),
+        ('TEXTCOLOR',(2,1),(3,-1),colors.whitesmoke),
         # set font size and color for fifth column
-        ('FONTSIZE',(4,1),(4,-1),12),
-        ('TEXTCOLOR',(4,1),(4,-1),colors.yellow),
+        ('FONTSIZE',(4,1),(4,-1),16),
+        ('TEXTCOLOR',(4,1),(4,-1),colors.whitesmoke),
         # ('BACKGROUND',(4,1),(4,-1),bcolor),
         # set font size and color for sixth and seventh columns
-        ('FONTSIZE',(5,1),(6,-1),12),
-        ('TEXTCOLOR',(5,1),(6,-1),colors.yellow),
+        ('FONTSIZE',(5,1),(6,-1),16),
+        ('TEXTCOLOR',(5,1),(6,-1),colors.whitesmoke),
         # set font size and color for eighth column
-        ('FONTSIZE',(7,1),(7,-1),12),
-        ('TEXTCOLOR',(7,1),(7,-1),colors.yellow),
+        ('FONTSIZE',(7,1),(7,-1),16),
+        ('TEXTCOLOR',(7,1),(7,-1),colors.whitesmoke),
         # ('ALIGN',(1,1), (1,-1),'RIGHT'),
         ('ALIGN',(1,0), (-1,-1),'CENTER'),
         ]))
@@ -271,7 +271,6 @@ async def UpdateData(ctx):
 #     Get list of guilds needing members
 #     """
     try:
-        await ctx.send(file=discord.File('OpenSlots.txt'))
         with open("OpenSlots.txt") as f: 
             content = "\n".join(f.readlines())
         await ctx.send("```"+'\n' +content+'\n'+"```")

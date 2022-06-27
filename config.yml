@@ -6,66 +6,66 @@
 allycodes :
   # Rebellion (jcrAggie)
   - "135718294"
+  # Order (Dr. Microphone)
+  - "598564956"
   # Empire (SavageWill)
   - "418877148"
   # Havoc (Andosan)
   - "924484782"
-  # Røgue (Finest)
-  - "481181396"
-  # Order (Dr. Microphone)
-  - "598564956"
   # Uprising (Gallows)
   - "193382128"
-  # # # Lotus (General Leia Organa (Lotus - in-game name is Ruby Starr Wynn))
-  # - "315585918"
-  # # Phoundlings (Jingle's alt)
-  # - "681711581"
-  # # Hope (Whitefly425)
-  # - "166494741"
-  # # Beskar (cokey)
-  # - "263852135"
-  # # Death Watch (kcaz zeraaus)
-  # - "825611769"
-  # # Away Team
-  # - "316582559"
-  # # Pain
-  # - "833756326"
-  # # Limb
-  # - "495879912"
+  # Lotus (General Leia Organa (Lotus - in-game name is Ruby Starr Wynn))
+  - "315585918"
+  # Røgue (Finest)
+  - "481181396"
+  # Away Team
+  - "316582559"
+  # Hope (Whitefly425)
+  - "166494741"
+  # Beskar (cokey)
+  - "263852135"
+  # Phoundlings (Jingle's alt)
+  - "681711581"
+  # Pain
+  - "833756326"
+  # Death Watch (kcaz zeraaus)
+  - "825611769"
+  # Limb
+  - "495879912"
 #
 # Here you can change the TB data displayed on the poster
 # This data cannot be gleaned from the api
 #
 DSTB :
-  Rebellion: 31
+  Rebellion: 32
   Ëmpire: 32
   Havoc: 31
-  Røgue: 28
+  Røgue: 29
   Ørder: 32
   Uprising: 29
   Lotus Society: 29
-  Phøundlings: 16
-  Høpe: 26
+  Phøundlings: 20
+  Høpe: 27
   Beskar: 17
   Deathwatch: 23(H)
   Away Team: 19
-  Pain: 33(H)
-  Limb: 13(H)
+  Pain: 10
+  Limb: 18(H)
 LSTB :
   Rebellion: 23
-  Ëmpire: 23
+  Ëmpire: 27
   Havoc: 16
   Røgue: 13
-  Ørder: 25
-  Uprising: 14
+  Ørder: 26
+  Uprising: 15
   Lotus Society: 15
   Phøundlings: 42(H)
   Høpe: 14
   Beskar: 41(H)
   Deathwatch: 21(H)
-  Away Team: 7
+  Away Team: 8
   Pain: 31(H)
-  Limb: 14(H)
+  Limb: 26(H)
 CPIT :
   Rebellion: Y
   Ëmpire: Y
@@ -73,7 +73,7 @@ CPIT :
   Røgue: Y
   Ørder: Y
   Uprising: Y
-  Lotus Society: N
+  Lotus Society: Y
   Phøundlings: N
   Høpe: Y
   Beskar: N
@@ -83,33 +83,33 @@ CPIT :
   Limb: N
 KAM :
   Rebellion: 29
-  Ëmpire: 30
+  Ëmpire: 31
   Havoc: 12
   Røgue: 5
   Ørder: 30
-  Uprising: 6
+  Uprising: 8
   Lotus Society: 7
   Phøundlings: 0
   Høpe: 12
   Beskar: 0
   Deathwatch: 0
-  Away Team: 3
+  Away Team: 7
   Pain: 0
   Limb: 0
 WAT :
   Rebellion: 44
   Ëmpire: 46
   Havoc: 33
-  Røgue: 34
+  Røgue: 35
   Ørder: 44
-  Uprising: 29
+  Uprising: 35
   Lotus Society: 35
-  Phøundlings: 28
+  Phøundlings: 36
   Høpe: 41
-  Beskar: 12
+  Beskar: 18
   Deathwatch: 0
-  Away Team: 25
-  Pain: 0
+  Away Team: 32
+  Pain: 5
   Limb: 0
 #
 # Here you can specify the output file
