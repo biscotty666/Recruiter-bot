@@ -8,12 +8,12 @@ allycodes :
   - "135718294"
   # Order (Dr. Microphone)
   - "598564956"
-  # # Empire (SavageWill)
-  # - "418877148"
-  # # Havoc (Andosan)
-  # - "924484782"
-  # # Uprising (Gallows)
-  # - "193382128"
+  # Empire (SavageWill)
+  - "418877148"
+  # Havoc (Andosan)
+  - "924484782"
+  # Uprising (Gallows)
+  - "193382128"
   # # Lotus (General Leia Organa (Lotus - in-game name is Ruby Starr Wynn))
   # - "315585918"
   # # Røgue (Finest)
@@ -31,7 +31,7 @@ allycodes :
   # # Death Watch (kcaz zeraaus)
   # - "825611769"
   # # Limb
-  - "495879912"
+  # - "495879912"
 #
 # Here you can change the TB data displayed on the poster
 # This data cannot be gleaned from the api

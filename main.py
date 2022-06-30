@@ -38,7 +38,7 @@ cwd = Path(__file__).parents[0]
 cwd = str(cwd)
 # print(f"{cwd}\n-----")
 
-# Fetch configuration variables
+# Load configuration variables
 with open('config.yml') as file :
     config = yaml.safe_load(file)
 
@@ -101,7 +101,6 @@ def GetGuildData():
         # Add infor to the OpenSlots.txt
         f = open('OpenSlots.txt', "a")
         if guildinfo['members'] < 50:
-            # f.write(str(guilds['GName']).ljust(20) + str(guilds['GMembers']).rjust(7) + str(round(guilds['GGp']/1000000)).rjust(8) + '/n')
             f.write(str(GNameModify(guildinfo['name'])).ljust(20) + str(guildinfo['members']).rjust(7) + str(round(guildinfo['gp']/1000000)).rjust(8)+'\n')
         f.close()
 
@@ -132,12 +131,11 @@ def GenerateSlide():
     c.setFont(config['Font'], config['FontSize'])
     c.setFillColor(colors.orangered)
     c.drawCentredString(width/2, 330, config['RSTitle'])
-    # c.setFont(config['Font'], config['FontSize']-14)
-    # c.drawCentredString(width/2, 10, 'hello there')
     c.drawImage('Shard-Character-Ki-Adi-Mundi.png', 440, 300,width=15, height=15)
     c.drawImage('Shard-Character-Wat_Tambor.png', 515, 300,width=15 , height=15)
 
     #populate data for the table
+
     #create first row of table
     data= [['', 'GP','DSTB', 'LSTB', 'CPit', '', '', 'GM']]
 
@@ -145,8 +143,6 @@ def GenerateSlide():
     for guild in guilds :
         #modify appearance and content of items in guilds
         GPRounded = str(round(guild['GGp']/1000000))
-
- 
         GNameModified = GNameModify(guild['GName'])
         
         # GName = GNameModify('GName')
@@ -212,28 +208,19 @@ for image in images:
     image.save('RecruitmentSlide.png')
 
 
-# Convert pdf to png
-# def Makepng():
-    # images = convert_from_path('RecruitmentSlide.pdf')
-    # for image in images:
-    #     image.save('RecruitmentSlide.png')
-
-# Define and start the bot
-# forv
-
-#Defining a few things
+#Defining a few things and creating RecBot
 secret_file = json.load(open(cwd+'/bot_config/secrets.json'))
 RecBot = commands.Bot(command_prefix='$', case_insensitive=True)#, owner_id=271612318947868673)
 RecBot.config_token = secret_file['token']
 logging.basicConfig(level=logging.INFO)
 RecBot.version = "0.1.0"
+with open("OpenSlots.txt") as f: content = "\n".join(f.readlines())
+
 
 @RecBot.event
 async def on_ready():
     print(f"-----\nLogged in as: {RecBot.user.name} : {RecBot.user.id}\n-----\nMy current prefix is: $\n-----")
     await RecBot.change_presence(activity=discord.Game(name=f"Hi, my names {RecBot.user.name}.\nUse $ to interact with me!")) # This changes the bots 'activity'
-    # try:
-    # "Oops")
 
 @RecBot.command(name='UpdateData', aliases=['ud', 'du'])
 async def UpdateData(ctx):
@@ -253,8 +240,6 @@ async def GetRecruitmentSlide(ctx):
     Get Recruitment Slide
     """
     try:
-        # force update
-        # Makepng()
         await ctx.send(file=discord.File('RecruitmentSlide.png'))
     except:
         await ctx.send("Could not fetch data. Please try again")
@@ -271,15 +256,15 @@ async def NeedMembers(ctx):
     except:
         await ctx.send("Oops")
 
-# @tasks.loop(seconds=60)
-# async def PostMembers():
-    num = 1
-#     try:
-#         with open("OpenSlots.txt") as f: 
-#             content = "\n".join(f.readlines())
-#         await ctx.send("```"+'\n' +content+'\n'+"```")
-#     except:
-#         await ctx.send("Oops")
-# PostMembers.start()
+@tasks.loop(hours=12)
+async def TestLoop():
+    await RecBot.mychannel.send("```"+'\n' +content+'\n'+"```")
+
+@TestLoop.before_loop
+async def before_TestLoop():
+    await RecBot.wait_until_ready()
+    RecBot.mychannel = RecBot.get_channel(991738419476701309)
+
+TestLoop.start()
         
 RecBot.run(RecBot.config_token) #Runs our bot
