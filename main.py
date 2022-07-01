@@ -226,6 +226,7 @@ async def UpdateData(ctx):
     except:
         await ctx.send("Could not fetch data. Trying again.")
 
+# Command to send png
 @RecBot.command(name='GetRecruitmentSlide', aliases=['rs', 'recslide'])
 async def GetRecruitmentSlide(ctx):
     """
@@ -236,6 +237,7 @@ async def GetRecruitmentSlide(ctx):
     except:
         await ctx.send("Could not fetch data. Please try again")
 
+# Command to send report on guilds needing members
 @RecBot.command(name='NeedMembers', aliases=['members', 'nm'])
 async def NeedMembers(ctx):
 #     """
@@ -248,6 +250,7 @@ async def NeedMembers(ctx):
     except:
         await ctx.send("Oops")
 
+# Loop to regularly send need members info
 @tasks.loop(hours=12)
 async def TestLoop():
     await RecBot.mychannel.send("```"+'\n' +content+'\n'+"```")
@@ -258,5 +261,6 @@ async def before_TestLoop():
     RecBot.mychannel = RecBot.get_channel(991738419476701309)
 
 TestLoop.start()
-        
+
+# Fire up the bot        
 RecBot.run(RecBot.config_token) #Runs our bot
