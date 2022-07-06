@@ -145,7 +145,6 @@ def GenerateSlide():
     for guild in guilds :
         #modify appearance and content of items in guilds
         GPRounded = str(round(guild['GGp']/1000000))
-
  
         GNameModified = GNameModify(guild['GName'])
         
