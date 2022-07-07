@@ -7,9 +7,9 @@ allycodes :
   # Rebellion (jcrAggie)
   - "135718294"
   # Order (Dr. Microphone)
-  - "598564956"
+#  - "598564956"
   # Empire (SavageWill)
-  - "418877148"
+#  - "418877148"
   # Havoc (Andosan)
   - "924484782"
   # Uprising (Gallows)
@@ -17,15 +17,15 @@ allycodes :
   # Lotus (General Leia Organa (Lotus - in-game name is Ruby Starr Wynn))
   - "315585918"
   # Røgue (Finest)
-  - "481181396"
+#  - "481181396"
   # Away Team
   - "316582559"
   # Hope (Whitefly425)
-  - "166494741"
+#  - "166494741"
   # Beskar (cokey)
   - "263852135"
   # Phoundlings (Jingle's alt)
-  - "681711581"
+#  - "681711581"
   # Pain
   - "833756326"
   # Death Watch (kcaz zeraaus)
@@ -38,14 +38,14 @@ allycodes :
 #
 DSTB :
   Rebellion: 32
-  Ëmpire: 32
+#  Ëmpire: 32
   Havoc: 31
-  Røgue: 29
-  Ørder: 32
+#  Røgue: 29
+#  Ørder: 32
   Uprising: 29
   Lotus Society: 29
-  Phøundlings: 20
-  Høpe: 27
+#  Phøundlings: 20
+#  Høpe: 27
   Beskar: 17
   Deathwatch: 23(H)
   Away Team: 19
@@ -53,14 +53,14 @@ DSTB :
   Limb: 18(H)
 LSTB :
   Rebellion: 23
-  Ëmpire: 27
+#  Ëmpire: 27
   Havoc: 16
-  Røgue: 13
-  Ørder: 26
+#  Røgue: 13
+#  Ørder: 26
   Uprising: 15
   Lotus Society: 15
-  Phøundlings: 42(H)
-  Høpe: 14
+#  Phøundlings: 42(H)
+#  Høpe: 14
   Beskar: 41(H)
   Deathwatch: 21(H)
   Away Team: 8
@@ -68,14 +68,14 @@ LSTB :
   Limb: 26(H)
 CPIT :
   Rebellion: Y
-  Ëmpire: Y
+#  Ëmpire: Y
   Havoc: Merc
-  Røgue: Y
-  Ørder: Y
+#  Røgue: Y
+#  Ørder: Y
   Uprising: Y
   Lotus Society: Y
-  Phøundlings: N
-  Høpe: Y
+#  Phøundlings: N
+#  Høpe: Y
   Beskar: N
   Deathwatch: N
   Away Team: N
@@ -83,14 +83,14 @@ CPIT :
   Limb: N
 KAM :
   Rebellion: 29
-  Ëmpire: 31
+#  Ëmpire: 31
   Havoc: 12
-  Røgue: 5
-  Ørder: 30
+#  Røgue: 5
+#  Ørder: 30
   Uprising: 8
   Lotus Society: 7
-  Phøundlings: 0
-  Høpe: 12
+#  Phøundlings: 0
+#  Høpe: 12
   Beskar: 0
   Deathwatch: 0
   Away Team: 7
@@ -98,14 +98,14 @@ KAM :
   Limb: 0
 WAT :
   Rebellion: 44
-  Ëmpire: 46
+#  Ëmpire: 46
   Havoc: 33
-  Røgue: 35
-  Ørder: 44
+#  Røgue: 35
+#  Ørder: 44
   Uprising: 35
   Lotus Society: 35
-  Phøundlings: 36
-  Høpe: 41
+#  Phøundlings: 36
+#  Høpe: 41
   Beskar: 18
   Deathwatch: 0
   Away Team: 32

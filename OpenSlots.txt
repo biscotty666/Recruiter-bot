@@ -1,16 +1,8 @@
-<<<<<<< HEAD
-Updated: 2022-06-29 23:53:44.785069
+Updated: 2022-07-07 10:10:59.562632
 
 Name                     GM      GP
-Ëmpire                   49     321
-Havoc                    49     312
-Uprising                 48     273
-Røgue                    49     254
-Away Team                47     217
-Beskar                   43     186
-Deathwatch               45     123
-=======
-Updated: 2022-07-06 09:24:33.333046
-
-Name                     GM      GP
->>>>>>> 6e6992d (Added ability to connect to and read from a spreadsheet. Values are hard coded and will need to be abstracted)
+Havoc                    49     315
+Uprising                 49     281
+Away Team                46     210
+Beskar                   43     188
+Deathwatch               47     132

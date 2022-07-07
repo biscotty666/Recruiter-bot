@@ -199,7 +199,7 @@ for image in images:
 
 # Defining a few things and creating RecBot
 secret_file = json.load(open(cwd+'/bot_config/secrets.json'))
-RecBot = commands.Bot(command_prefix='/', case_insensitive=True)#, owner_id=271612318947868673)
+RecBot = commands.Bot(command_prefix='!', case_insensitive=True)#, owner_id=271612318947868673)
 RecBot.config_token = secret_file['token']
 logging.basicConfig(level=logging.INFO)
 RecBot.version = "0.1.0"
@@ -210,8 +210,8 @@ with open("OpenSlots.txt") as f: content = "\n".join(f.readlines())
 # Commands to initialize bot
 @RecBot.event
 async def on_ready():
-    print(f"-----\nLogged in as: {RecBot.user.name} : {RecBot.user.id}\n-----\nMy current prefix is: /\n-----")
-    await RecBot.change_presence(activity=discord.Game(name=f"Hi, my names {RecBot.user.name}.\nUse / to interact with me!"))
+    print(f"-----\nLogged in as: {RecBot.user.name} : {RecBot.user.id}\n-----\nMy current prefix is: !\n-----")
+    await RecBot.change_presence(activity=discord.Game(name=f"Hi, my names {RecBot.user.name}.\nUse ! to interact with me!"))
 
 # Command to update data from api
 @RecBot.command(name='UpdateData', aliases=['ud', 'du'])
