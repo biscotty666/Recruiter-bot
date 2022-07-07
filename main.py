@@ -1,22 +1,25 @@
-# !/usr/bin/python
+# Prepare environment
 
-#Prepare environment
-import PIL.ImageDraw
+# Discord
 import discord
-from discord.ext import tasks
+from discord.ext import tasks, commands
+import platform
+import logging
+
+# General commands and utilities
 import os
 import regex
 import yaml
-from pathlib import Path # For paths
-import platform # For stats
-import logging
- 
+from pathlib import Path
 import time
-import json
-from discord.ext import commands # For discord
-
 from datetime import datetime
+import json
+
+# For interaction with game api
 from swgohhelp import SWGOHhelp, settings
+
+# Image and pdf
+import PIL.ImageDraw
 from reportlab.pdfgen import canvas, pdfimages
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfbase import pdfmetrics
@@ -33,16 +36,15 @@ from pdf2image import convert_from_path
 pdfmetrics.registerFont(TTFont('Trickster', 'Trickster-Reg.ttf'))
 pdfmetrics.registerFont(TTFont('Vampire', 'Vampire Wars.ttf'))
 
-#Get current working directory
+# Get current working directory
 cwd = Path(__file__).parents[0]
 cwd = str(cwd)
-# print(f"{cwd}\n-----")
 
-# Fetch configuration variables
+# Load configuration variables
 with open('config.yml') as file :
     config = yaml.safe_load(file)
 
-#Make the connection
+# Make the connection
 creds = settings(config['CredName'], config['CredPass'], config['CredNum'], config['CredLet'])
 client = SWGOHhelp(creds)
 
@@ -58,7 +60,7 @@ def GNameModify(name):
     return name
 
 
-#Fetch the data
+# Fetch the data
 def GetGuildData():
     # Initialize some variables
     counter = 0
@@ -70,8 +72,6 @@ def GetGuildData():
     f.write("Updated: " + str(now) + '\n\n')
     f.write('Name'.ljust(20) + 'GM'.rjust(7) + 'GP'.rjust(8) + '\n')
     f.close
-
-    # rt pdf to png
 
     # Make the calls and populate guilds
     for allycode in config['allycodes'] :
@@ -91,17 +91,16 @@ def GetGuildData():
         response = GetData()
         guildinfo = response[0]
 
-        # Add the rest of the info
+        # Add the info to populate guilds for use in drawing the slide
         guilds.append({
             'GGp' : guildinfo['gp'],
             'GName' : GNameModify(guildinfo['name']),
             'GMembers' : guildinfo['members'],
         })
 
-        # Add infor to the OpenSlots.txt
+        # Add info to the OpenSlots.txt for guilds needing members
         f = open('OpenSlots.txt', "a")
         if guildinfo['members'] < 50:
-            # f.write(str(guilds['GName']).ljust(20) + str(guilds['GMembers']).rjust(7) + str(round(guilds['GGp']/1000000)).rjust(8) + '/n')
             f.write(str(GNameModify(guildinfo['name'])).ljust(20) + str(guildinfo['members']).rjust(7) + str(round(guildinfo['gp']/1000000)).rjust(8)+'\n')
         f.close()
 
@@ -113,43 +112,37 @@ guilds = GetGuildData()
 # Generate the slide from data in guilds
 def GenerateSlide():
 
-    #Create the Canvas object
+    #Create and configure the Canvas object
     c = canvas.Canvas(config['RSFilename'])
     width = 640
     height = 360
     c.setPageSize((width, height))
     c.setTitle(config['RSTitle'])
-    im = Image.open('RPBackground.jpg')
-    im_rgba = im.copy()
-    im_rgba.putalpha(200)
-    im_rgba.save('RPBackground.png')
 
-    #Draw statically positioned items on canvas
+    # Draw statically positioned items on canvas
 
+    # Add background image
     c.drawImage('RPBackgroun.jpeg', 0, 0, width=width, height=height)
-    # c.drawImage('image.jpg', width=width, height=height)
 
+    # Add title/alliance name
     c.setFont(config['Font'], config['FontSize'])
     c.setFillColor(colors.orangered)
     c.drawCentredString(width/2, 330, config['RSTitle'])
-    # c.setFont(config['Font'], config['FontSize']-14)
-    # c.drawCentredString(width/2, 10, 'hello there')
+
+    # Place icons at top of two columns
     c.drawImage('Shard-Character-Ki-Adi-Mundi.png', 440, 300,width=15, height=15)
     c.drawImage('Shard-Character-Wat_Tambor.png', 515, 300,width=15 , height=15)
 
-    #populate data for the table
-    #create first row of table
+    # Populate data for the table
+
+    # Create first row of table
     data= [['', 'GP','DSTB', 'LSTB', 'CPit', '', '', 'GM']]
 
-    #create the rest of the rows
+    # Create the rest of the rows
     for guild in guilds :
-        #modify appearance and content of items in guilds
+        # Modify appearance and content of items in guilds
         GPRounded = str(round(guild['GGp']/1000000))
- 
         GNameModified = GNameModify(guild['GName'])
-        
-        # GName = GNameModify('GName')
-
         DSTB = config['DSTB'][GNameModified]
         LSTB = config['LSTB'][GNameModified]
         CPIT = config['CPIT'][GNameModified]
@@ -159,17 +152,9 @@ def GenerateSlide():
         #create table row
         data.append([GNameModified, GPRounded, DSTB, LSTB, CPIT, WAT, KAM, guild['GMembers']])
 
-    #create Table object based on data and add to image
-
-    bcolor = Color(10,10,10,alpha=.5)
-    # rgbYellow = Color()
-
+    # Create Table object based on data and add to image
     table = Table(data, colWidths=[100,75,75,75,75,75,75], rowHeights=20)
     table.setStyle(TableStyle([
-
-    # t.setStyle(TableStyle([("BOX", (0, 0), (-1, -1), 0.25, colors.black),
-    #                        ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black)]))
-
         ('FONT',(0,0),(-1,-1), 'Helvetica-Bold', 18),
         ('TEXTCOLOR',(0,0),(-1,-1),colors.white),
         ('BOTTOMPADDING',(0,0),(-1,0),8),
@@ -188,7 +173,6 @@ def GenerateSlide():
         # set font size and color for fifth column
         ('FONTSIZE',(4,1),(4,-1),16),
         ('TEXTCOLOR',(4,1),(4,-1),colors.whitesmoke),
-        # ('BACKGROUND',(4,1),(4,-1),bcolor),
         # set font size and color for sixth and seventh columns
         ('FONTSIZE',(5,1),(6,-1),16),
         ('TEXTCOLOR',(5,1),(6,-1),colors.whitesmoke),
@@ -206,38 +190,30 @@ def GenerateSlide():
 
 GenerateSlide()
 
+# Convert slide to png
 images = convert_from_path('RecruitmentSlide.pdf')
 for image in images:
     image.save('RecruitmentSlide.png')
 
+# Create and launch discord bot
 
-# Convert pdf to png
-# def Makepng():
-    # images = convert_from_path('RecruitmentSlide.pdf')
-    # for image in images:
-    #     image.save('RecruitmentSlide.png')
-
-# Define and start the bot
-# forv
-
-#Defining a few things
+# Defining a few things and creating RecBot
 secret_file = json.load(open(cwd+'/bot_config/secrets.json'))
-RecBot = commands.Bot(command_prefix='$', case_insensitive=True)#, owner_id=271612318947868673)
+RecBot = commands.Bot(command_prefix='/', case_insensitive=True)#, owner_id=271612318947868673)
 RecBot.config_token = secret_file['token']
 logging.basicConfig(level=logging.INFO)
 RecBot.version = "0.1.0"
 
+# Prepare content for need members message
+with open("OpenSlots.txt") as f: content = "\n".join(f.readlines())
+
+# Commands to initialize bot
 @RecBot.event
 async def on_ready():
-    print(f"-----\nLogged in as: {RecBot.user.name} : {RecBot.user.id}\n-----\nMy current prefix is: $\n-----")
-    await RecBot.change_presence(activity=discord.Game(name=f"Hi, my names {RecBot.user.name}.\nUse $ to interact with me!")) # This changes the bots 'activity'
-    try:
-        with open("OpenSlots.txt") as f: 
-            content = "\n".join(f.readlines())
-        await ctx.send("```"+'\n' +content+'\n'+"```")
-    except:
-        await ctx.send("Oops")
+    print(f"-----\nLogged in as: {RecBot.user.name} : {RecBot.user.id}\n-----\nMy current prefix is: /\n-----")
+    await RecBot.change_presence(activity=discord.Game(name=f"Hi, my names {RecBot.user.name}.\nUse / to interact with me!"))
 
+# Command to update data from api
 @RecBot.command(name='UpdateData', aliases=['ud', 'du'])
 async def UpdateData(ctx):
     """
@@ -248,20 +224,20 @@ async def UpdateData(ctx):
         guilds = GetGuildData()
         await ctx.send('Data Updated')
     except:
-        await ctx.send("Could not fetch data. Please try again")
+        await ctx.send("Could not fetch data. Trying again.")
 
+# Command to send png
 @RecBot.command(name='GetRecruitmentSlide', aliases=['rs', 'recslide'])
 async def GetRecruitmentSlide(ctx):
     """
     Get Recruitment Slide
     """
     try:
-        # force update
-        # Makepng()
         await ctx.send(file=discord.File('RecruitmentSlide.png'))
     except:
         await ctx.send("Could not fetch data. Please try again")
 
+# Command to send report on guilds needing members
 @RecBot.command(name='NeedMembers', aliases=['members', 'nm'])
 async def NeedMembers(ctx):
 #     """
@@ -274,14 +250,17 @@ async def NeedMembers(ctx):
     except:
         await ctx.send("Oops")
 
-@tasks.loop(seconds=60)
-async def PostMembers():
-    try:
-        with open("OpenSlots.txt") as f: 
-            content = "\n".join(f.readlines())
-        await ctx.send("```"+'\n' +content+'\n'+"```")
-    except:
-        await ctx.send("Oops")
-PostMembers.start()
-        
+# Loop to regularly send need members info
+@tasks.loop(hours=12)
+async def TestLoop():
+    await RecBot.mychannel.send("```"+'\n' +content+'\n'+"```")
+
+@TestLoop.before_loop
+async def before_TestLoop():
+    await RecBot.wait_until_ready()
+    RecBot.mychannel = RecBot.get_channel(991738419476701309)
+
+TestLoop.start()
+
+# Fire up the bot        
 RecBot.run(RecBot.config_token) #Runs our bot
