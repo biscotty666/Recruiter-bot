@@ -1,59 +1,55 @@
-from pprint import pprint
-from googleapiclient.discovery import build
-from google.oauth2 import service_account
+def GetSSData():
 
-keyfile = 'keys.json'
-SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
+    from pprint import pprint
+    from google.oauth2 import service_account
+    from googleapiclient.discovery import build
 
-creds = None
-creds = service_account.Credentials.from_service_account_file(
+
+    keyfile = 'keys.json'
+    SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
+
+    creds = None
+    creds = service_account.Credentials.from_service_account_file(
         keyfile, scopes=SCOPES)
 
 
-# Create the service and sheet object
-SpreadsheetsID = '14s5-_5BDiaYrzSqVeKX4vkkn4iBy8qxRm2P2ugFIUn4'
-service = build('sheets', 'v4', credentials=creds)
-sheet = service.spreadsheets()
+    # Create the service and sheet object
+    SpreadsheetsID = '14s5-_5BDiaYrzSqVeKX4vkkn4iBy8qxRm2P2ugFIUn4'
+    service = build('sheets', 'v4', credentials=creds)
+    sheet = service.spreadsheets()
 
-result = sheet.values().get(spreadsheetId=SpreadsheetsID,
-                            range="Alliance!a1:b").execute()
-GuildList = result.get('values', [])
-
-guilds = []
-
-# l1 = [[1,2],[3,4],[5,[6,7]]]
-# d1={x[0]:x[1] for x in l1}
-# print(d1)#Output:{1: 2, 3: 4, 5: [6, 7]}
-
-GuildListLine = []
-
-for guild in GuildList:
-    name = guild[0]
+    # Get the guild names from the Alliance sheet and store in GuildList
     result = sheet.values().get(spreadsheetId=SpreadsheetsID,
-                            range=str(name)+"!a1:b7").execute()
-    GuildStats = result.get('values', {})
-#     pprint(GuildStats)
+                            range="Alliance!a1:b").execute()
+    GuildList = result.get('values', [])
 
-    for line in GuildStats:
-        item = iter(line)
-        ds = dict(zip(item, item))
-        GuildListLine.append(ds)
-
-    GuildListLine.append({"GP" : 0})
-    GuildListLine.append({"GM" : 0})  
-    guilds.append(GuildListLine)
+    # Initialize variables
+    guilds = []
     GuildListLine = []
 
-pprint(guilds)
-#         GuildListLine = []
+    # Go through each guild and add stats to guilds variable
+    for guild in GuildList:
+        name = guild[0]
+        # Get all stats from guild Sheet and store in GuildStats
+        result = sheet.values().get(spreadsheetId=SpreadsheetsID,
+                                    range=str(name)+"!a1:b7").execute()
+        GuildStats = result.get('values', {})
+
+        # GuildStats are a list of lists, but we need a list of
+        # dictionaries so we create GuildListLine for the list of
+        # dictionaries which we can then append to guilds
+        for line in GuildStats:
+            item = iter(line)
+            ds = dict(zip(item, item))
+            GuildListLine.append(ds)
+
+        # Add placeholders for live data generated in main.py
+        GuildListLine.append({"GP": 0})
+        GuildListLine.append({"GM": 0})
+        guilds.append(GuildListLine)
+        GuildListLine = []
+
+    return guilds
 
 
-        # print(ds)
-#     pprint(guilds)    
 
-#     for line in GuildStats:
-#         statline = {item: item for item in line}
-#         print(statline)
-
-#     print(GuildStats)
-    
