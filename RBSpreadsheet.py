@@ -30,13 +30,17 @@ for guild in GuildList:
     result = sheet.values().get(spreadsheetId=SpreadsheetsID,
                             range=str(name)+"!a1:b7").execute()
     GuildStats = result.get('values', {})
-    GSD = {x[0]:x[1] for x in GuildStats}
-    
-    DSTB = GSD['DSTB']
-    LSTB = GSD['LSTB']
-    CPIT = GSD['CPIT']
-    WAT = GSD['WAT']
-    KAM = GSD['KAM']
-   
-    pprint(DSTB)
+
+    for line in GuildStats:
+        item = iter(line)
+        ds = dict(zip(item, item))
+        guilds.append(ds)
+        # print(ds)
+    pprint(guilds)    
+
+#     for line in GuildStats:
+#         statline = {item: item for item in line}
+#         print(statline)
+
+#     print(GuildStats)
     
