@@ -107,6 +107,8 @@ def GetGuildData():
     return guilds
 
 guilds = GetGuildData()
+
+return guilds
 print(guilds)
 
 

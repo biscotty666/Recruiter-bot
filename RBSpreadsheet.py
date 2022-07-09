@@ -25,18 +25,31 @@ guilds = []
 # d1={x[0]:x[1] for x in l1}
 # print(d1)#Output:{1: 2, 3: 4, 5: [6, 7]}
 
+GuildListLine = []
+
 for guild in GuildList:
     name = guild[0]
     result = sheet.values().get(spreadsheetId=SpreadsheetsID,
                             range=str(name)+"!a1:b7").execute()
     GuildStats = result.get('values', {})
+#     pprint(GuildStats)
 
     for line in GuildStats:
         item = iter(line)
         ds = dict(zip(item, item))
-        guilds.append(ds)
+        GuildListLine.append(ds)
+
+    GuildListLine.append({"GP" : 0})
+    GuildListLine.append({"GM" : 0})  
+    guilds.append(GuildListLine)
+    GuildListLine = []
+
+pprint(guilds)
+#         GuildListLine = []
+
+
         # print(ds)
-    pprint(guilds)    
+#     pprint(guilds)    
 
 #     for line in GuildStats:
 #         statline = {item: item for item in line}
