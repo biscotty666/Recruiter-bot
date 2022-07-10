@@ -1,7 +1,6 @@
-from pprint import pprint
-
+# Function to generate the sheet object
 def MakeSheet():
-    from pprint import pprint
+    # from pprint import pprint
     from google.oauth2 import service_account
     from googleapiclient.discovery import build
     import yaml
@@ -18,25 +17,26 @@ def MakeSheet():
     sheet = service.spreadsheets()
     return sheet
 
+# Get the guild names from the Alliance sheet and store in GuildList
 def GetNames():
-    # Get the guild names from the Alliance sheet and store in GuildList
-    # Load configuration variables
+    # Load configuration variables and get the sheet
     import yaml
     with open('config.yml') as file :
         config = yaml.safe_load(file)
     SpreadsheetsID = config['SpreadsheetsID']
     sheet = MakeSheet()
+
+    # Get the list of names from the Alliance sheet
     result = sheet.values().get(spreadsheetId=SpreadsheetsID,
                             range="Alliance!a1:b").execute()
     GuildNameList = result.get('values', [])
     return GuildNameList
 
+# Generate and return a list of ally codes 
 def GetACs():
-    # Get the guild ally codes from the Alliance sheet and store in GuildList
     ACList = []
     # Load configuration variables
     import yaml
-
     with open('config.yml') as file :
         config = yaml.safe_load(file)
     SpreadsheetsID = config['SpreadsheetsID']
@@ -52,40 +52,21 @@ def GetACs():
     return ACList
 
 
+# Generate and return the guilds object
 def GetSSData():
-
-    # from pprint import pprint
-    # from google.oauth2 import service_account
-    # from googleapiclient.discovery import build
-
-
-    # keyfile = 'keys.json'
-    # SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
-
-    # creds = None
-    # creds = service_account.Credentials.from_service_account_file(
-    #     keyfile, scopes=SCOPES)
-
-
-    # # Create the service and sheet object
-    # SpreadsheetsID = '14s5-_5BDiaYrzSqVeKX4vkkn4iBy8qxRm2P2ugFIUn4'
-    # service = build('sheets', 'v4', credentials=creds)
-    # sheet = service.spreadsheets()
-    sheet = MakeSheet()
-    # Get the guild names from the Alliance sheet and store in GuildList
-    # result = sheet.values().get(spreadsheetId=SpreadsheetsID,
-    #                         range="Alliance!a1:b").execute()
-    # GuildList = result.get('values', [])
-    GuildList = GetNames()
-
     # Initialize variables
     guilds = []
     GuildListLine = []
 
+    # Load configuration variables
     import yaml
     with open('config.yml') as file :
         config = yaml.safe_load(file)
     SpreadsheetsID = config['SpreadsheetsID']
+
+    # Get the sheet object and list of Guild names
+    sheet = MakeSheet()
+    GuildList = GetNames()
 
     # Go through each guild and add stats to guilds variable
     for guild in GuildList:
@@ -110,6 +91,3 @@ def GetSSData():
         GuildListLine = []
 
     return guilds
-
-guilds = GetSSData()
-pprint(guilds)
