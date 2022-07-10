@@ -8,7 +8,6 @@ import logging
 
 # General commands and utilities
 import os
-import regex
 import yaml
 from pathlib import Path
 import time
@@ -48,38 +47,26 @@ with open('config.yml') as file :
 creds = settings(config['CredName'], config['CredPass'], config['CredNum'], config['CredLet'])
 client = SWGOHhelp(creds)
 
-# This is to change the returned name into the name as printed
-# on the poster
-def GNameModify(name):
-    # Remove the word Phantom and any of it's permutations
-    name = regex.sub(r'Phant[oø?]+m\s*?', '', name, 1)
-    # Remove leading space
-    name = regex.sub(r'^ ', '', name, 1)
-    # Special bonus for Limb
-    name = regex.sub(r'\?\?', 'i', name, 1)
-    return name
-
-
 # Fetch the data
 def GetGuildData():
     # Initialize some variables
     counter = 0
-    from RBSpreadsheet import GetSSData
+    from RBSpreadsheet import GetSSData, GetACs
     guilds = GetSSData()
+    ACList = GetACs()
 
     # Always stay grounded in the present
     now = datetime.now()
  
-    # Initialize txt file with some header info
+    # Initialize OpenSlots.txt file with some header info
     f = open('OpenSlots.txt', 'w')
     f.write("Updated: " + str(now) + '\n\n')
     f.write('Name'.ljust(20) + 'GM'.rjust(7) + 'GP'.rjust(8) + '\n')
     f.close
 
     # Make the calls and populate guilds
-    for allycode in config['allycodes'] :
-        counter += 1
-        print('This is pass ', counter, '/14')
+    for allycode in ACList :
+        print('This is pass ', counter+1, '/14')
         def GetData():
             try:
                 print('Trying')
@@ -94,14 +81,17 @@ def GetGuildData():
         response = GetData()
         guildinfo = response[0]
 
-        guilds[counter-1][7]['GP'] = guildinfo['gp']
-        guilds[counter-1][8]['GM'] = guildinfo['members']
-    
+        guilds[counter][7]['GP'] = guildinfo['gp']
+        guilds[counter][8]['GM'] = guildinfo['members']
+
         # Add info to the OpenSlots.txt for guilds needing members
         f = open('OpenSlots.txt', "a")
         if guildinfo['members'] < 50:
-            f.write(str(GNameModify(guildinfo['name'])).ljust(20) + str(guildinfo['members']).rjust(7) + str(round(guildinfo['gp']/1000000)).rjust(8)+'\n')
+            f.write(str(guilds[counter][0]['Name']).ljust(20) + str(guildinfo['members']).rjust(7) + str(round(guildinfo['gp']/1000000)).rjust(8)+'\n')
         f.close()
+
+        counter += 1
+        
 
     return guilds
 
@@ -109,7 +99,6 @@ guilds = GetGuildData()
 
 # Generate the slide from data in guilds
 def GenerateSlide():
-
     #Create and configure the Canvas object
     c = canvas.Canvas(config['RSFilename'])
     width = 640
@@ -118,7 +107,6 @@ def GenerateSlide():
     c.setTitle(config['RSTitle'])
 
     # Draw statically positioned items on canvas
-
     # Add background image
     c.drawImage('RPBackgroun.jpeg', 0, 0, width=width, height=height)
 
@@ -132,7 +120,6 @@ def GenerateSlide():
     c.drawImage('Shard-Character-Wat_Tambor.png', 515, 300,width=15 , height=15)
 
     # Populate data for the table
-
     # Create first row of table
     data= [['', 'GP','DSTB', 'LSTB', 'CPit', '', '', 'GM']]
 
@@ -197,7 +184,7 @@ for image in images:
 
 # Defining a few things and creating RecBot
 secret_file = json.load(open(cwd+'/bot_config/secrets.json'))
-RecBot = commands.Bot(command_prefix='/', case_insensitive=True)#, owner_id=271612318947868673)
+RecBot = commands.Bot(command_prefix='!', case_insensitive=True)#, owner_id=271612318947868673)
 RecBot.config_token = secret_file['token']
 logging.basicConfig(level=logging.INFO)
 RecBot.version = "0.1.0"
@@ -208,8 +195,8 @@ with open("OpenSlots.txt") as f: content = "\n".join(f.readlines())
 # Commands to initialize bot
 @RecBot.event
 async def on_ready():
-    print(f"-----\nLogged in as: {RecBot.user.name} : {RecBot.user.id}\n-----\nMy current prefix is: /\n-----")
-    await RecBot.change_presence(activity=discord.Game(name=f"Hi, my names {RecBot.user.name}.\nUse / to interact with me!"))
+    print(f"-----\nLogged in as: {RecBot.user.name} : {RecBot.user.id}\n-----\nMy current prefix is: !\n-----")
+    await RecBot.change_presence(activity=discord.Game(name=f"Hi, my names {RecBot.user.name}.\nUse ! to interact with me!"))
 
 # Command to update data from api
 @RecBot.command(name='UpdateData', aliases=['ud', 'du'])
