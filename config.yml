@@ -1,5 +1,6 @@
 # This is the file used to maintain the Recruitment Poster.
 ---
+<<<<<<< HEAD
 # List an ally code associated with each guild you want to appear on the poster.
 # The order of the codes here will determine the order of the guilds on the poster.
 #
@@ -111,6 +112,8 @@ WAT :
   Away Team: 32
   Pain: 5
   Limb: 0
+=======
+>>>>>>> spreadsheets
 #
 # Here you can specify the output file
 #
@@ -143,3 +146,6 @@ CredName : 'brianscotty'
 CredPass : 'tz0tz1lSW'
 CredNum : '123'
 CredLet : 'abc'
+
+SpreadsheetsID : '14s5-_5BDiaYrzSqVeKX4vkkn4iBy8qxRm2P2ugFIUn4'
+
