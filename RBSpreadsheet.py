@@ -24,10 +24,10 @@ def GetNames():
     import yaml
     with open('config.yml') as file :
         config = yaml.safe_load(file)
-    SpreadsheetsID = config['SpreadsheetsID']
+    SpreadsheetsID = config['SpreadsheetsID']['Alliance Master']
     sheet = MakeSheet()
     result = sheet.values().get(spreadsheetId=SpreadsheetsID,
-                            range="Alliance!a1:b").execute()
+                            range="Guilds!a1:b").execute()
     GuildNameList = result.get('values', [])
     return GuildNameList
 
@@ -39,14 +39,14 @@ def GetACs():
 
     with open('config.yml') as file :
         config = yaml.safe_load(file)
-    SpreadsheetsID = config['SpreadsheetsID']
-
+    
     names = GetNames()
     for alliance in names:
         name = alliance[0]
         sheet = MakeSheet()
+        config[name]['SpreadsheetsID']
         result = sheet.values().get(spreadsheetId=SpreadsheetsID,
-                                    range=str(name)+"!b2").execute()
+                                    range="Stats!b2").execute()
         ResultValues = result.get('values', {})
         ACList.append(ResultValues[0][0])
     return ACList
@@ -54,28 +54,6 @@ def GetACs():
 
 def GetSSData():
 
-    # from pprint import pprint
-    # from google.oauth2 import service_account
-    # from googleapiclient.discovery import build
-
-
-    # keyfile = 'keys.json'
-    # SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
-
-    # creds = None
-    # creds = service_account.Credentials.from_service_account_file(
-    #     keyfile, scopes=SCOPES)
-
-
-    # # Create the service and sheet object
-    # SpreadsheetsID = '14s5-_5BDiaYrzSqVeKX4vkkn4iBy8qxRm2P2ugFIUn4'
-    # service = build('sheets', 'v4', credentials=creds)
-    # sheet = service.spreadsheets()
-    sheet = MakeSheet()
-    # Get the guild names from the Alliance sheet and store in GuildList
-    # result = sheet.values().get(spreadsheetId=SpreadsheetsID,
-    #                         range="Alliance!a1:b").execute()
-    # GuildList = result.get('values', [])
     GuildList = GetNames()
 
     # Initialize variables
@@ -85,14 +63,15 @@ def GetSSData():
     import yaml
     with open('config.yml') as file :
         config = yaml.safe_load(file)
-    SpreadsheetsID = config['SpreadsheetsID']
 
     # Go through each guild and add stats to guilds variable
     for guild in GuildList:
         name = guild[0]
+        sheet = MakeSheet()
+        SpreadsheetsID = config['SpreadsheetsID'][name]
         # Get all stats from guild Sheet and store in GuildStats
         result = sheet.values().get(spreadsheetId=SpreadsheetsID,
-                                    range=str(name)+"!a1:b7").execute()
+                                    range="Stats!a1:b7").execute()
         GuildStats = result.get('values', {})
 
         # GuildStats are a list of lists, but we need a list of
