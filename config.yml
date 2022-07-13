@@ -1,5 +1,116 @@
 # This is the file used to maintain the Recruitment Poster.
 ---
+# List an ally code associated with each guild you want to appear on the poster.
+# The order of the codes here will determine the order of the guilds on the poster.
+#
+allycodes :
+  # Rebellion (jcrAggie)
+  - "135718294"
+  # Order (Dr. Microphone)
+  - "598564956"
+  # Empire (SavageWill)
+  - "418877148"
+  # Havoc (Andosan)
+  - "924484782"
+  # Uprising (Gallows)
+  - "193382128"
+  # Lotus (General Leia Organa (Lotus - in-game name is Ruby Starr Wynn))
+  - "315585918"
+  # Røgue (Finest)
+  - "481181396"
+  # Away Team
+  - "316582559"
+  # Hope (Whitefly425)
+  - "166494741"
+  # Beskar (cokey)
+  - "263852135"
+  # Phoundlings (Jingle's alt)
+  - "681711581"
+  # Pain
+  - "833756326"
+  # Death Watch (kcaz zeraaus)
+  - "825611769"
+  # Limb
+  - "495879912"
+#
+# Here you can change the TB data displayed on the poster
+# This data cannot be gleaned from the api
+#
+DSTB :
+  Rebellion: 32
+  Ëmpire: 32
+  Havoc: 31
+  Røgue: 30
+  Ørder: 32
+  Uprising: 30
+  Lotus Society: 29
+  Phøundlings: 20
+  Høpe: 27
+  Beskar: 17
+  Deathwatch: 23(H)
+  Away Team: 19
+  Pain: 10
+  Limb: 29(H)
+LSTB :
+  Rebellion: 23
+  Ëmpire: 27
+  Havoc: 16
+  Røgue: 13
+  Ørder: 26
+  Uprising: 15
+  Lotus Society: 15
+  Phøundlings: 42(H)
+  Høpe: 14
+  Beskar: 41(H)
+  Deathwatch: 21(H)
+  Away Team: 8
+  Pain: 31(H)
+  Limb: 26(H)
+CPIT :
+  Rebellion: Y
+  Ëmpire: Y
+  Havoc: Y
+  Røgue: Y
+  Ørder: Y
+  Uprising: Y
+  Lotus Society: Y
+  Phøundlings: N
+  Høpe: Y
+  Beskar: N
+  Deathwatch: N
+  Away Team: N
+  Pain: N
+  Limb: N
+KAM :
+  Rebellion: 30
+  Ëmpire: 31
+  Havoc: 12
+  Røgue: 5
+  Ørder: 30
+  Uprising: 9
+  Lotus Society: 8
+  Phøundlings: 0
+  Høpe: 12
+  Beskar: 0
+  Deathwatch: 0
+  Away Team: 7
+  Pain: 0
+  Limb: 0
+WAT :
+  Rebellion: 44
+  Ëmpire: 46
+  Havoc: 33
+  Røgue: 35
+  Ørder: 44
+  Uprising: 29
+  Lotus Society: 35
+  Phøundlings: 36
+  Høpe: 41
+  Beskar: 18
+  Deathwatch: 0
+  Away Team: 32
+  Pain: 5
+  Limb: 0
 #
 # Here you can specify the output file
 #
@@ -12,41 +123,27 @@ RSFilename : "RecruitmentSlide.pdf"
 #
 Font : 'Vampire'
 FontSize : 28
-FontColor : 'brickred'
-# FontColor is currently not working. This must be changed in
-# main.py. Search for TEXTCOLOR
+
+# Font settings are currently not working from the config file
+# so go in main.py. Search for FONT. A list of colors with
+# visual can be found at
+# https://getnames.net/list-of-colors-names-from-a-to-z/
+#
 #FontColor : 'brickred'
-#
-# I don't actually  know what this does yet lol
-#
-RSDocumentTitle : 'The Phant??m Alliance'
 #
 # This is the title that appears on the poster
 #
-RSTitle : 'Phantøm Alliance'
+RSDocumentTitle : 'The Phantøm Alliance'
+#
+# I don't actually  know what this does yet lol
+#
+RSTitle : 'Phantom Alliance'
 #
 # This is where you put in your credentials to log
-# in to the api
+# in to the api. These can be quickly obtained
+# at https://api.swgoh.help
 #
-CredName : 'brianscotty'
-CredPass : 'tz0tz1lSW'
+CredName : 'ChaosTitan'
+CredPass : 'mnbLKJ1234!'
 CredNum : '123'
 CredLet : 'abc'
-
-SpreadsheetsID :
-  Alliance Master: '1_uYgWWKUvJlP5rzq8JueYMgNYRamhF_kcl23dHwajBU'
-  Rebellion: '1xGnx38jAuL0i1CZ8i2NgOpmZtUfo4tcB31QrHlAFNcI'
-  Ørder: '1qjJmBY1K3BPrAH0gndS1GmcSkM8YSLwb3nuiK3eLU8o'
-  Ëmpire: '1onscnyBzU4nGZVMyuwS3nsjwbr-UaFeEwiFrkcTguBQ'
-  Havoc: '160FFse3fHpijJ5FcaKGacYLt0Bqnpkx_YoQmJ-cQSE4'
-  Uprising: '1uMdcriSkqIPGJbqucVNr6YPG8mdaXJ7uXZ182i5NDPo'
-  Lotus: '1lYeVaz_XxTFyCTK6MW4vk4ei5zACPTr8FYWBwA9xCws'
-  Røgue: '1kcJxtkThpN9DnmQ3M_X-qSa5Vkn2kRDiou-Ke_u7btE'
-  Away Team: '1petOJrvJnoQmPEXGI3dJmC2uMFwhI2VSU9YEYEnvQEk'
-  Høpe: '1kj0zBkZf2LEGilyiZxiCSqTjX1gnKmQ0Bf9kUma8ucI'
-  Beskar: '18wSBBzCsdWA_oXKZ3Aya--XfGpx_g7ExlixLpxoLOFk'
-  Phøundlings: '1LZwZ2nwg4Vzy0h5QYkXIuLM3tfrp8OYi7syl2PBTTNI'
-  Pain: '1aZprMd32Zxe-zl8yETSJDcEj56jSp6HZzQsnGPdtc0I'
-  Death Watch: '1sy5jbViiYfmbdvJfN8VfgN27zXRgoO2PpssXoU5UoCw'
-  Limb: '19uENg8bOd59fUHvFoCR-pOAMLg5sE792vk00PgY8B0I'
-

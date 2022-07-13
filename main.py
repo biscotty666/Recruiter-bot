@@ -1,251 +1,360 @@
-# Prepare environment
-
-# Discord
+#!/usr/bin/python
+import interactions
 import discord
-from discord.ext import tasks, commands
-import platform
-import logging
-
-# General commands and utilities
 import os
-import yaml
-from pathlib import Path
-import time
-from datetime import datetime
+import requests
 import json
+import random
 
-# For interaction with game api
+# Prepare environment
+# import asyncpg
+from discord.ext import tasks
+import regex
+import yaml
+import time
 from swgohhelp import SWGOHhelp, settings
-
-# Image and pdf
-import PIL.ImageDraw
-from reportlab.pdfgen import canvas, pdfimages
+from reportlab.pdfgen import canvas
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfbase import pdfmetrics
 from reportlab.lib import colors
-from reportlab.lib.colors import Color
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.units import mm, cm
 from reportlab.platypus import Table, TableStyle, SimpleDocTemplate, Paragraph
 from PIL import Image, ImageDraw
-from pdf2image import convert_from_path
 
-# Prepare custom fonts
 pdfmetrics.registerFont(TTFont('Trickster', 'Trickster-Reg.ttf'))
 pdfmetrics.registerFont(TTFont('Vampire', 'Vampire Wars.ttf'))
+import datetime
+from keep_alive import keep_alive
+from pdf2image import convert_from_path
+from update_gnum import update_gnum
 
-# Get current working directory
-cwd = Path(__file__).parents[0]
-cwd = str(cwd)
+from interactions.ext.get import get
 
-# Load configuration variables
-with open('config.yml') as file :
-    config = yaml.safe_load(file)
 
-# Make the connection
-creds = settings(config['CredName'], config['CredPass'], config['CredNum'], config['CredLet'])
-client = SWGOHhelp(creds)
+#
 
-# Fetch the data
-def GetGuildData():
-    # Initialize some variables
-    counter = 0
-    from RBSpreadsheet import GetSSData, GetACs
-    guilds = GetSSData()
-    ACList = GetACs()
+# Discord login
 
-    # Always stay grounded in the present
-    now = datetime.now()
- 
-    # Initialize OpenSlots.txt file with some header info
-    f = open('OpenSlots.txt', 'w')
-    f.write("Updated: " + str(now) + '\n\n')
-    f.write('Name'.ljust(20) + 'GM'.rjust(7) + 'GP'.rjust(8) + '\n')
-    f.close
 
-    # Make the calls and populate guilds
-    for allycode in ACList :
-        print('This is pass ', counter+1, '/14')
+def update_all_guild():
+    # try:
+    f = open('OpenSlots.txt', "w")
+    f.close()
+
+    # Discord interactions aka slash commands
+    # bot = interactions.Client(token='DISCORD_TOKEN')
+
+    # Fetch configuration variables
+    with open('config.yml') as file:
+        config = yaml.safe_load(file)
+
+    # Fetch guild data from game. From the raw data populate guilds
+
+    # Make the connection
+    creds = settings(config['CredName'], config['CredPass'], config['CredNum'], config['CredLet'])
+    client = SWGOHhelp(creds)
+
+    # Fetch the data
+    guilds = []
+    NumPass = 1
+    # f = open('OpenSlots.txt', "w")
+    # f.close()
+
+    # Clear OpenSlots file because Replit doesnt like the close function
+
+    w = open('OpenSlots.txt', "w")
+    w.write("")
+    w.close()
+
+    f = open('OpenSlots.txt', 'a')
+
+    # f.write('Name\tMembers\tGP\n')
+    f.write('Name'.ljust(15) + 'Members'.rjust(7) + 'GP'.rjust(8) + '\n')
+    f.close()
+    for allycode in config['allycodes']:
         def GetData():
             try:
-                print('Trying')
+                print('Trying to get guild data', NumPass, '/14')
                 response = client.get_data('guild', allycode)
-                if response == ' None ':
-                    GetData()
+                # print(response)
                 return response
-            except Exception as e:
-                time.sleep(15)
+            except:
+                print('Waiting 20 secs')
+                time.sleep(20)
                 GetData()
 
-        response = GetData()
-        guildinfo = response[0]
+        # extract dictionary from list
+        try:
+            guildinfo = GetData()
+            guildinfo = guildinfo[0]
+        except:
+            print('Bad data, try again')
+            GetData()
 
-        guilds[counter][7]['GP'] = guildinfo['gp']
-        guilds[counter][8]['GM'] = guildinfo['members']
+        if type(guildinfo) == 'NoneType':
+            print('Empty Response')
+            GetData()
 
-        # Add info to the OpenSlots.txt for guilds needing members
+        # Add the rest of the info
+        try:
+            NameProcessed = guildinfo['name']
+        except:
+            print('Even more bad data')
+            GetData()
+
+        # Convert database version to human readable
+        NameProcessed = regex.sub(r'Phant[oø?]+m\s*?', '', NameProcessed, 1)
+        NameProcessed = regex.sub(r'^ ', '', NameProcessed, 1)
+        NameProcessed = regex.sub(r'\?\?', 'i', NameProcessed, 1)
+
+        # Populate the guilds dictionary
+        guilds.append({
+            'GGp': guildinfo['gp'],
+            'GName': NameProcessed,
+            'GMembers': guildinfo['members'],
+            'GRaid': guildinfo['raid'],
+            'AllyCode': allycode,
+        })
+
+        # Generate text file to list guilds with membership below 50
+
         f = open('OpenSlots.txt', "a")
-        if guildinfo['members'] < 50:
-            f.write(str(guilds[counter][0]['Name']).ljust(20) + str(guildinfo['members']).rjust(7) + str(round(guildinfo['gp']/1000000)).rjust(8)+'\n')
+        if guildinfo['members'] < 50: f.write(
+            NameProcessed.ljust(15) + str(guildinfo['members']).rjust(5) + str(round(guildinfo['gp'] / 1000000)).rjust(
+                10) + '\n')
         f.close()
 
-        counter += 1
-        
+        print('Success!')
+        NumPass += 1
+    # Add time marker to OpenSlots
+    now = datetime.datetime.now() - datetime.timedelta(hours=5)
+    t = open('OpenSlots.txt', "a")
+    t.write("Guilds not at Capacity"+'\n'+"Updated: " + now.strftime("%Y-%m-%d %H:%M:%S" + " CST " + '\n'))
+    t.close()
 
-    return guilds
+    # populate Canvas
 
-guilds = GetGuildData()
-
-# Generate the slide from data in guilds
-def GenerateSlide():
-    #Create and configure the Canvas object
+    # Create the Canvas object
     c = canvas.Canvas(config['RSFilename'])
-    width = 640
+    width = 740
     height = 360
     c.setPageSize((width, height))
     c.setTitle(config['RSTitle'])
 
-    # Draw statically positioned items on canvas
-    # Add background image
     c.drawImage('RPBackgroun.jpeg', 0, 0, width=width, height=height)
-
-    # Add title/alliance name
+    c.drawImage('Shard-Character-Ki-Adi-Mundi.png', 492, 300, width=30, height=30)
+    c.drawImage('Shard-Character-Wat_Tambor.png', 578, 300, width=30, height=30)
+    # add the title to the image
     c.setFont(config['Font'], config['FontSize'])
-    c.setFillColor(colors.orangered)
-    c.drawCentredString(width/2, 330, config['RSTitle'])
+    c.setFillColor(colors.whitesmoke)
+    docTitle = config['RSDocumentTitle']
+    docTitle = regex.sub(r'\?\?', "\u00F8", config['RSDocumentTitle'])
+    # print(docTitle)
+    c.drawCentredString(width / 2, 330, docTitle)
 
-    # Place icons at top of two columns
-    c.drawImage('Shard-Character-Ki-Adi-Mundi.png', 440, 300,width=15, height=15)
-    c.drawImage('Shard-Character-Wat_Tambor.png', 515, 300,width=15 , height=15)
+    # populate data for the table
 
-    # Populate data for the table
-    # Create first row of table
-    data= [['', 'GP','DSTB', 'LSTB', 'CPit', '', '', 'GM']]
+    # create first row of table
+    data = [['', 'GP', 'DSTB', 'LSTB', 'CPit', ' ', ' ', 'GM']]
+    # create the rest of the rows
+    for guild in guilds:
+        # modify appearance and content of items in guilds
+        GPRounded = str(round(guild['GGp'] / 1000000))
+        DSTB = config['DSTB'][guild['GName']]
+        LSTB = config['LSTB'][guild['GName']]
+        CPIT = config['CPIT'][guild['GName']]
+        KAM = config['KAM'][guild['GName']]
+        WAT = config['WAT'][guild['GName']]
+        # create table row
+        data.append([guild['GName'], GPRounded, DSTB, LSTB, CPIT, KAM, WAT, guild['GMembers']])
 
-    # Create the rest of the rows
-    for guild in guilds :
-        GName = guild[0]['Name']
-        GPRounded = str(round(guild[7]['GP']/1000000))
-        GMembers = guild[8]['GM']
-        DSTB = guild[2]['DSTB']
-        LSTB = guild[3]['LSTB']
-        CPIT = guild[4]['CPIT']
-        WAT = guild[6]['WAT']
-        KAM = guild[5]['KAM']
-
-        #create table row
-        data.append([GName, GPRounded, DSTB, LSTB, CPIT, WAT, KAM, GMembers])
-
-    # Create Table object based on data and add to image
-    table = Table(data, colWidths=[100,75,75,75,75,75,75], rowHeights=20)
+    # create Table object based on data and add to image
+    table = Table(data, colWidths=[130, 82, 82, 82, 82, 82], rowHeights=20)
     table.setStyle(TableStyle([
-        ('FONT',(0,0),(-1,-1), 'Helvetica-Bold', 18),
-        ('TEXTCOLOR',(0,0),(-1,-1),colors.white),
-        ('BOTTOMPADDING',(0,0),(-1,0),8),
-        # set font and color for top row
-        ('FONTSIZE',(0,0),(-1,0),18),
-        ('TEXTCOLOR',(0,0),(-1,0),colors.cyan),
-        # set font size and color for first column
-        ('FONTSIZE',(0,1),(0,-1),18),
-        ('TEXTCOLOR',(0,1),(0,-1),colors.cyan),
-        # set font size and color for second column
-        ('FONTSIZE',(1,1),(1,-1),16),
-        ('TEXTCOLOR',(1,1),(1,-1),colors.whitesmoke),
-        # set font size and color for third and fourth column
-        ('FONTSIZE',(2,1),(3,-1),16),
-        ('TEXTCOLOR',(2,1),(3,-1),colors.whitesmoke),
-        # set font size and color for fifth column
-        ('FONTSIZE',(4,1),(4,-1),16),
-        ('TEXTCOLOR',(4,1),(4,-1),colors.whitesmoke),
-        # set font size and color for sixth and seventh columns
-        ('FONTSIZE',(5,1),(6,-1),16),
-        ('TEXTCOLOR',(5,1),(6,-1),colors.whitesmoke),
-        # set font size and color for eighth column
-        ('FONTSIZE',(7,1),(7,-1),16),
-        ('TEXTCOLOR',(7,1),(7,-1),colors.whitesmoke),
-        # ('ALIGN',(1,1), (1,-1),'RIGHT'),
-        ('ALIGN',(1,0), (-1,-1),'CENTER'),
-        ]))
-    w, h = table.wrapOn(c, width, height)
-    table.drawOn(c, 10, 310-h)
+        # set font for table
+        ('FONT', (0, 0), (-1, -1), 'Helvetica-Bold', 18),
+        # create some space between first row and rest of table
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 10),
+        # First column font size and color
+        ('FONTSIZE', (0, 0), (0, -1), 18),
+        ('TEXTCOLOR', (0, 0), (0, -1), colors.cyan),
+        # First row font size and color
+        ('FONTSIZE', (0, 0), (0, -1), 18),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.cyan),
+        # The rest
+        ('FONTSIZE', (1, 1), (-1, -1), 16),
+        ('TEXTCOLOR', (1, 1), (-1, -1), colors.whitesmoke),
+        # Apply centering to all columns but the first
+        ('ALIGN', (1, 0), (-1, -1), 'CENTER'),
+    ]))
 
-    c.showPage()
+    # Print the table
+    table.wrapOn(c, width, height)
+    table.drawOn(c, 10, 10)
+
+    # Create the pdf
     c.save()
 
-GenerateSlide()
+    pages = convert_from_path('RecruitmentSlide.pdf', 500)
+    for page in pages:
+        page.save('RecruitmentSlide.png', 'PNG')
 
-# Convert slide to png
-images = convert_from_path('RecruitmentSlide.pdf')
-for image in images:
-    image.save('RecruitmentSlide.png')
 
-# Create and launch discord bot
+# def update_all_test():
+# try:
+#  update_all()
+#  else:
+#  raise ValueError
 
-# Defining a few things and creating RecBot
-secret_file = json.load(open(cwd+'/bot_config/secrets.json'))
-RecBot = commands.Bot(command_prefix='!', case_insensitive=True)#, owner_id=271612318947868673)
-RecBot.config_token = secret_file['token']
-logging.basicConfig(level=logging.INFO)
-RecBot.version = "0.1.0"
+# try:
+#   update_all_test()
+# except ValueError:
+# update_all()
 
-# Prepare content for need members message
-with open("OpenSlots.txt") as f: content = "\n".join(f.readlines())
+# discord event handling
+# disclient = discord.Client()
+bot = interactions.Client(token=os.getenv('DISCORD_TOKEN'))
 
-# Commands to initialize bot
-@RecBot.event
+
+@bot.event
 async def on_ready():
-    print(f"-----\nLogged in as: {RecBot.user.name} : {RecBot.user.id}\n-----\nMy current prefix is: !\n-----")
-    await RecBot.change_presence(activity=discord.Game(name=f"Hi, my names {RecBot.user.name}.\nUse ! to interact with me!"))
+    # We can use the client "me" attribute to get information about the bot.
+    print(f"We're online! We've logged in as {bot.me.name}.")
 
-# Command to update data from api
-@RecBot.command(name='UpdateData', aliases=['ud', 'du'])
-async def UpdateData(ctx):
-    """
-    Refresh data from game server
-    """
+    # We're also able to use property methods to gather additional data.
+    print(f"Our latency is {round(bot.latency)} ms.")
+    # myLoop.start
+    keep_alive()
+
+
+bot.load('interactions.ext.files')
+
+
+# bot.load('interactions-ext-files')
+# bot.load("interactions.ext.enhanced")
+@bot.command(
+    name="rslide",
+    description="Posts Recruitment Slide for guild"
+)
+async def rslide(ctx):
+    await ctx.send("Posting Recruitment Slide")
+
+    channel = await get(bot, interactions.Channel, channel_id=991120479026946068)
+    #channel_rec = await get(bot, interactions.Channel, channel_id=938273738191958036)
+    img = interactions.File('RecruitmentSlide.png')
+    await channel.send(files=img)
+    #await channel_rec.send(files=img)
+    await ctx.edit("Recruitment Slide Posted")
+
+
+@bot.command(
+    name="gnum",
+    description="Posts Recruitment Numbers"
+)
+async def gnum(ctx):
+
+    await ctx.send("Posting Recruitment Numbers")
+    channel = await get(bot, interactions.Channel, channel_id=991120479026946068)
+    #channel_rec = await get(bot, interactions.Channel, channel_id=938273738191958036)
+    with open("OpenSlots.txt") as f: content = "\n".join(f.readlines())
+    await channel.send("```" + '\n' + content + '\n' + "```")
+    #await channel_rec.send("```" + '\n' + content + '\n' + "```")
+    await ctx.edit("Recruitment Numbers Posted")
+
+
+@bot.command(
+    name="update_all",
+    description="Updates Recruitment Slide and Guild Numbers"
+)
+async def update_all(ctx):
+  try:
+      await ctx.send("Updating Recruitment Slide and Guild Numbers")
+      update_all_guild()
+      await ctx.edit("Recruitment Slide and Guild Numbers Updated")
+  except:
+      await ctx.edit("Error in Update. Please rerun command.")
+
+
+@bot.command(
+    name="update_num",
+    description="Updates Guild Numbers"
+)
+async def update_num(ctx):
+  try:
+      await ctx.send("Updating Guild Numbers")
+      update_gnum()
+      await ctx.edit("Guild Numbers Updated")
+  except:
+      await ctx.edit("Error in Update. Please rerun command.")
+
+
+@bot.command(
+    name="help",
+    description="Lists Commands Recognized by Phantom-Recruit-Bot"
+)
+async def help(ctx):
+    await ctx.send(
+        "Commands Recognized by Phantom-Officer-Bot:" + '\n' + "/updateall- starts the bot and pulls all fresh data" + '\n' + "/updatenum- updates the guild numbers for the shortlined text" + '\n' + "/rslide- post the recruitment slide" + '\n' + "/gnum- post guilds numbers who are not at capacity" + '\n' + "/pushup- pushes the updated numbers and slide to the bot channel")
+
+
+@bot.command(
+    name="pushup",
+    description="Pushes Recruitment Slide and Guild Numbers to Bot channel"
+)
+async def pushup(ctx):
+    await ctx.send("Pushing to Bot channel")
+    channel = await get(bot, interactions.Channel, channel_id=991120479026946068)
+    #channel_rec = await get(bot, interactions.Channel, channel_id=938273738191958036)
+    with open("OpenSlots.txt") as f: content = "\n".join(f.readlines())
+    await channel.send("```" + '\n' + content + '\n' + "```")
+    #await channel_rec.send("```" + '\n' + content + '\n' + "```")
+    img = interactions.File('RecruitmentSlide.png')
+    await channel.send(files=img)
+    #img = interactions.File('RecruitmentSlide.png')
+    #await channel_rec.send(files=img)
+    await ctx.edit(content="Pushed")
+
+
+@tasks.loop(hours=1)
+async def TestLoop1():
+    print('Updating...')
+    #  await disclient.mychannel.send("Updating guild data..")
+    # update_all()
     try:
-        await ctx.send('Fetching data. This may take a while')
-        guilds = GetGuildData()
-        await ctx.send('Data Updated')
+        update_all_guild()
     except:
-        await ctx.send("Could not fetch data. Trying again.")
+        update_all_guild()
 
-# Command to send png
-@RecBot.command(name='GetRecruitmentSlide', aliases=['rs', 'recslide'])
-async def GetRecruitmentSlide(ctx):
-    """
-    Get Recruitment Slide
-    """
-    try:
-        await ctx.send(file=discord.File('RecruitmentSlide.png'))
-    except:
-        await ctx.send("Could not fetch data. Please try again")
 
-# Command to send report on guilds needing members
-@RecBot.command(name='NeedMembers', aliases=['members', 'nm'])
-async def NeedMembers(ctx):
-#     """
-#     Get list of guilds needing members
-#     """
-    try:
-        with open("OpenSlots.txt") as f: 
-            content = "\n".join(f.readlines())
-        await ctx.send("```"+'\n' +content+'\n'+"```")
-    except:
-        await ctx.send("Oops")
+TestLoop1.start()
 
-# Loop to regularly send need members info
-@tasks.loop(hours=12)
-async def TestLoop():
-    await RecBot.mychannel.send("```"+'\n' +content+'\n'+"```")
 
-@TestLoop.before_loop
-async def before_TestLoop():
-    await RecBot.wait_until_ready()
-    RecBot.mychannel = RecBot.get_channel(991738419476701309)
+@tasks.loop(hours=2)
+async def testloop():
+    print('Posting...')
+    #  await disclient.mychannel.send("Updating guild data..")
+    # update_all()
+    channel = await get(bot, interactions.Channel, channel_id=991120479026946068)
+    #channel_rec = await get(bot, interactions.Channel, channel_id=938273738191958036)
+    with open("OpenSlots.txt") as f: content = "\n".join(f.readlines())
+    await channel.send("```" + '\n' + content + '\n' + "```")
+    #await channel_rec.send("```" + '\n' + content + '\n' + "```")
+    img = interactions.File('RecruitmentSlide.png')
+    await channel.send(files=img)
+    #img = interactions.File('RecruitmentSlide.png')
+    #await channel_rec.send(files=img)
+    print('Posted')
 
-TestLoop.start()
 
-# Fire up the bot        
-RecBot.run(RecBot.config_token) #Runs our bot
+@testloop.before_loop
+async def before_testloop():
+    await bot.wait_until_ready()
+    channel = await get(bot, interactions.Channel, channel_id=991120479026946068)
+    #channel_rec = await get(bot, interactions.Channel, channel_id=938273738191958036)
+
+
+testloop.start()
+# disclient.run(os.getenv('DISCORD_TOKEN'))
+bot.start()
