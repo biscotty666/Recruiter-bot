@@ -21,7 +21,7 @@ pykwalify==1.8.0
 pyparsing==3.0.9
 python-dateutil==2.8.2
 PyYAML==6.0
-reportlab==3.5.67
+reportlab==3.6.13
 ruamel.yaml==0.17.21
 ruamel.yaml.clib==0.2.6
 six==1.16.0
