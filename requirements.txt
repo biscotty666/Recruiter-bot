@@ -25,6 +25,6 @@ reportlab==3.6.13
 ruamel.yaml==0.17.21
 ruamel.yaml.clib==0.2.6
 six==1.16.0
-virtualenv==20.14.1
+virtualenv==20.36.1
 virtualenv-clone==0.5.7
 yarl==1.7.2
